@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
-const userRoutes = require('./routes/user')
+require ('dotenv').config();
+const userRoutes = require('./routes/user');
+const bookRoutes = require('./routes/book');
 
 const app = express();
 
-mongoose.connect('',
+mongoose.connect(process.env.DATABASE_CONNECTION,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
   
 app.use('/api/auth', userRoutes);
+app.use('/api/books', bookRoutes);
 
 
 module.exports = app;
