@@ -3,10 +3,10 @@ const Book = require('../models/Book')
 const jwt = require('jsonwebtoken');
 
 exports.createThing = (req, res, next) => {
-    const thingObject = JSON.parse(req.body.thing);
+    const thingObject = JSON.parse(req.body.book);
     delete thingObject._id;
     delete thingObject._userId;
-    const thing = new Thing({
+    const thing = new Book({
         ...thingObject,
         userId: req.auth.userId,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
@@ -15,7 +15,7 @@ exports.createThing = (req, res, next) => {
         year: req.body.year,
         genre: req.body.genre,
         rating: [],
-        averageRating: '0'
+        averageRating: 0
     });
   
     thing.save()
