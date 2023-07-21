@@ -21,6 +21,12 @@ exports.createThing = (req, res, next) => {
 
 exports.getBooks = (req, res, next) => {
     Book.find()
-    .then(things => res.status(200).json(things))
+    .then(books => res.status(200).json(books))
+    .catch(error => res.status(400).json({ error }));
+}
+
+exports.getOneBook = (req, res, next) => {
+    Book.findOne({ _id: req.params.id })
+    .then(oneBook => res.status(200).json(oneBook))
     .catch(error => res.status(400).json({ error }));
 }
