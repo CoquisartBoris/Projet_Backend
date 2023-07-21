@@ -8,5 +8,6 @@ const bookCtrl = require('../controllers/book')
 
 /* Création d'un book*/
 router.post('/', auth, multer, bookCtrl.createThing);
+router.get('/', bookCtrl.getBooks);
 
 module.exports = router;
