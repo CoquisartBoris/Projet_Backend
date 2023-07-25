@@ -62,11 +62,25 @@ exports.updateBook = (req, res, next) => {
 exports.getBestBooks = (req, res, next) => {
     Book.find({}, null, {limit:3}).sort({averageRating: "desc"})
     .then(bestBooks => {
-        console.log(bestBooks)
         return res.status(200).json(bestBooks)
     })
     .catch(error => {
-        console.log(error)
+        return res.status(400).json({ error })
+    })
+}
+exports.rateBook = (req, res, next) => {
+    Book.findOne({ _id: req.params.id })
+    .then(book => {
+       if (book.ratings.indexOf(req.auth.userId) === -1) {
+            book.ratings.push({userId: req.auth.userId, grade: req.body.rating})
+            book.save()
+            .then(book => res.status(200).json(book))
+            .catch(error => { res.status(400).json( { error })})
+        } else {
+            return res.status(200).json(book)
+        }
+    })
+    .catch(error => {
         return res.status(400).json({ error })
     })
 }
