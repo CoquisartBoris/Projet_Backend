@@ -7,7 +7,7 @@ const bookSchema = mongoose.Schema({
   year: { type: Number, required: true },
   genre: { type: String, required: true },
   ratings : [{ userId: String, grade: Number }],
-  averageRating: { type: Number, required: true},
+  averageRating: { type: Number, required: false, default: 0},
   userId: { type: String, required: true}
 });
 

@@ -9,13 +9,16 @@ exports.createBook = (req, res, next) => {
     delete bookObject._id;
     delete bookObject._userId;
 
+    const userRating = bookObject.ratings.find(rating => rating.userId === req.auth.userId)
+
     const book = new Book({
         ...bookObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        userId: req.auth.userId
-        
+        userId: req.auth.userId,
+        averageRating: bookObject.averageRating === null ? 0 : bookObject.averageRating,
+        ratings: userRating.grade === 0 ? [] : bookObject.ratings
     });
-
+    console.log(bookObject)
     book.save()
     .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
@@ -95,12 +98,23 @@ exports.rateBook = (req, res, next) => {
     .then(book => {
        if (book.ratings.indexOf(req.auth.userId) === -1) {
             book.ratings.push({userId: req.auth.userId, grade: req.body.rating})
+            let sum = 0;
+            let count = 0;
+            book.ratings.forEach(rating => {
+                sum = sum + rating.grade
+                count++
+            });
+            if (count === 0) {
+                book.averageRating = 0
+            } else {
+                book.averageRating = sum / count
+            }
             book.save()
             .then(book => res.status(200).json(book))
             .catch(error => { res.status(400).json( { error })})
         } else {
             //book.ratings.updateOne(req.auth.userId, req.body.rating)
-            return res.status(200).json(book)
+            return res.status(400).json("book is already rated")
         }
     })
     .catch(error => {
