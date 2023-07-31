@@ -7,7 +7,6 @@ const sharp = require('../middleware/sharp');
 
 const bookCtrl = require('../controllers/book')
 
-/* Création d'un book*/
 router.post('/:id/rating', auth, bookCtrl.rateBook);
 router.get('/bestrating', bookCtrl.getBestBooks);
 router.post('/', auth, multer,sharp, bookCtrl.createBook);

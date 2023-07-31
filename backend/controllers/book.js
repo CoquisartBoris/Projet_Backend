@@ -18,7 +18,7 @@ exports.createBook = (req, res, next) => {
         averageRating: bookObject.averageRating === null ? 0 : bookObject.averageRating,
         ratings: userRating.grade === 0 ? [] : bookObject.ratings
     });
-    console.log(bookObject)
+
     book.save()
     .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
@@ -56,13 +56,7 @@ exports.deleteOneBook = (req, res, next) => {
             res.status(500).json({ error });
         });
 };
-/*
-exports.updateBook = (req, res, next) => {
-    Book.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet modifié !'}))
-    .catch(error => res.status(400).json({ error }));
-}
-*/
+
 exports.updateBook = (req, res, next) => {
     const bookObject = req.file ? {
         ...JSON.parse(req.body.book),
@@ -113,7 +107,6 @@ exports.rateBook = (req, res, next) => {
             .then(book => res.status(200).json(book))
             .catch(error => { res.status(400).json( { error })})
         } else {
-            //book.ratings.updateOne(req.auth.userId, req.body.rating)
             return res.status(400).json("book is already rated")
         }
     })
